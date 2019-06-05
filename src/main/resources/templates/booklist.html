@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	layout:decorator="layout">
+<head>
+<title>Book Detail</title>
+<script th:src="@{'/assets/js/book.js'}"></script>
+<link href="../static/assets/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="container main-content list">
+			<div class="row" style="margin-bottom: 20px; margin-top: 20px">
+				<a id="addNew" class="btn btn-success pull-left"> <span
+					class="glyphicon glyphicon-plus"></span> Add new book
+				</a>
+<!-- 				<form class="form-inline pull-right" action="#" -->
+<!-- 					th:action="@{/book/search}" method="GET"> -->
+<!-- 					<div class="form-group"> -->
+<!-- 						<input type="text" class="form-control" name="s" -->
+<!-- 							placeholder="Title..." /> -->
+<!-- 					</div> -->
+<!-- 					<button type="submit" class="btn btn-primary">Search</button> -->
+<!-- 				</form> -->
+			</div>
+			<th:block th:if="${#lists.isEmpty(list)}">
+				<h3>No Book</h3>
+			</th:block>
+
+			<th:block th:unless="${#lists.isEmpty(list)}">
+				<nav class="row justify-content-center wow fadeIn"
+					data-wow-delay="0.2s">
+					<div class="row">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Title</th>
+									<th>Author</th>
+									<th>Edit</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="contact,iterStat : ${list}">
+									<td> <a th:href="@{/detail?id={id}(id=${contact.id})}" th:text="${contact.id}"></a></td>
+									<td th:text="${contact.title}"></td>
+									<td th:text="${contact.author}"></td>
+									<td style="text-align: center"><a
+										th:href="@{javascript:editBook({id});(id=${contact.id})}"><span
+											class="glyphicon glyphicon-pencil"></span></a></td>
+									<td style="text-align: center"><a
+										th:href="@{javascript:deleteBook({id});(id=${contact.id})}"><span
+											class="glyphicon glyphicon-trash"></span></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<ul class="pagination">
+						<li
+							th:class="${currentIndex == 1}? 'page-item disabled' : 'page-item'">
+							<a id ="firstPage" class="page-link" th:href="@{/book/page/1}">First</a>
+						</li>
+						<li
+							th:class="${currentIndex == 1}? 'page-item disabled': 'page-item' ">
+							<a class="page-link" aria-label="Previous"
+							th:href="@{|/book/page/${currentIndex - 1}|}"
+							title='Go to previous page'><span aria-hidden="true">«</span>
+								<span class="sr-only">Previous</span></a>
+						</li>
+						<li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+							th:class="${item == currentIndex ? 'page-item active' :'page-item' }">
+							<a class="page-link" th:href="@{|/book/page/${item}|}"> <span
+								th:text='${item}'>1</span>
+						</a>
+						</li>
+						<li
+							th:class="${currentIndex >= totalPageCount}? 'page-item disabled': 'page-item'">
+							<a class="page-link" aria-label="Next"
+							th:href="@{|/book/page/${currentIndex + 1}|}"
+							title='Go to next page'><span aria-hidden="true">»</span> <span
+								class="sr-only">Next</span></a>
+						</li>
+						<li
+							th:class="${currentIndex >= totalPageCount}? 'page-item disabled':'page-item'">
+							<a class="page-link" th:href="@{|/book/page/${totalPageCount}|}">Last</a>
+						</li>
+					</ul>
+				</nav>
+			</th:block>
+		</div>
+
+		<div class="form-popup" id="myForm">
+			<form  id="form" action="" name="registration" class="form-container">
+				<table>
+					<tr>
+						<td id = "header" colspan="2" class="header">ADD NEW BOOK</td>
+					</tr>
+					<tr style="display: none">
+						<td class="label-text">Id</td>
+						<td><input name="id" disabled="disabled"/></td>
+					</tr>
+					<tr>
+						<td class="label-text">Title</td>
+						<td><input name="title" id="title" /></td>
+					</tr>
+					
+					<tr>
+						<td class="label-text">Author</td>
+						<td><input name="author" id="author" /></td>
+					</tr>
+					
+					<tr>
+						<td class="label-text">Description</td>
+						<td><input name="description" id="description"/></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;"></td>
+						<td style="text-align: right;"><input id="btn-submit" type="button" value="Submit" class="btn" />
+						<input id="btn-close" type="button" value="Close" class="btn cancel"
+							onclick="closeForm()" /></td>
+					</tr>
+				</table> 
+			</form>
+		</div>
+	</div>
+	<!-- /.container -->
+</body>
+</html>
